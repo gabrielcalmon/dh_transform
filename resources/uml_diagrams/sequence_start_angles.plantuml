@@ -1,0 +1,27 @@
+@startuml
+!theme plain
+
+skinparam sequenceMessageAlign center
+
+actor User as User
+participant "Life cycle server" as Server
+database Node as Node
+
+User -> Server : Send manipulator configuration
+
+|||
+Server -> Node : Send manipulator configuration
+Server -> Node : Send configure command
+
+|||
+Node -> Node : Build manipulator configuration
+
+|||
+Node -> Node : Set initial angles as zero
+
+|||
+Server <-- Node : Send manipulator configuration
+
+|||
+User <-- Server : Send manipulator configuration
+@enduml
