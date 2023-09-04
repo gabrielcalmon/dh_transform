@@ -1,0 +1,4 @@
+# double array
+listener_node:
+  ros__parameters:
+    param7: [0.2, 0.3, 0.4, 0.5]
