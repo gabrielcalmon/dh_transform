@@ -12,8 +12,8 @@ def generate_launch_description():
             package='dh_transform',
             executable='listener',
             name='listener_node',
-            # parameters=[os.path.join(
-            #     get_package_share_directory('dh_transform'),
-            #     'config', 'dh_params.yaml')],
+            parameters=[os.path.join(
+                get_package_share_directory('dh_transform'),
+                'config', 'dh_params.yaml')],
             output='screen'),
     ])
