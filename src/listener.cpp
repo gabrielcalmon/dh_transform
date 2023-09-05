@@ -8,20 +8,20 @@
 #include "std_msgs/msg/string.hpp"
 
 using namespace std::chrono_literals;
-using Eigen::MatrixXd;
+using Eigen::MatrixXd, Eigen::Matrix4d, Eigen::Vector4d;
 
 /* This example creates a subclass of Node and uses std::bind() to register a
 * member function as a callback from the timer. */
 
-class MinimalPublisher : public rclcpp::Node
+class DhCalculator : public rclcpp::Node
 {
 public:
-    MinimalPublisher()
+    DhCalculator()
     : Node("minimal_publisher")//, count_(0)
     {
         // publisher_ = this->create_publisher<std_msgs::msg::String>("topic", 10);
         // timer_ = this->create_wall_timer(
-        // 500ms, std::bind(&MinimalPublisher::timer_callback, this));
+        // 500ms, std::bind(&DhCalculator::timer_callback, this));
 
         
         this->declare_parameter("number_of_joints", 0);
@@ -33,6 +33,7 @@ public:
 
         dh_vector = get_parameter("dh_params").as_double_array();
 
+        // THIS CODE WAS NOT SUPOSED TO BE ON CONSTRUCTOR
         if((number_of_joints+1)%4 != 0){    // It is expected that the DH params come in multiples of 4
             RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Invalid number of DH parameters");
             // [TODO] THROW ERROR; INTERRUPT
@@ -47,7 +48,10 @@ public:
             dh_params(i, 2) = dh_vector[2 + 4*i];
             dh_params(i, 3) = dh_vector[3 + 4*i];
         }
-        std::cout << "Here is the dh matrix:\n" << dh_params << std::endl;   
+        std::cout << "Here is the dh matrix:\n" << dh_params << std::endl;
+
+        Vector4d dh_line{0,0, 100, 90};
+        dh2Transform(dh_line);
     }
 
 private:
@@ -64,12 +68,39 @@ private:
     std::vector<double> dh_vector;
     int number_of_joints;
     MatrixXd dh_params;
+    double deg2rad(double deg);
+    Matrix4d calculateEndEffectorPose(MatrixXd dh_matrix);
+    Matrix4d dh2Transform(Vector4d dh_line);
+    Matrix4d end_effector_pose;
 };
+
+double DhCalculator::deg2rad(double deg){
+    return deg*M_PI/180;
+}
+Matrix4d DhCalculator::dh2Transform(Vector4d dh_line){
+    double alfaRad = deg2rad(dh_line(0));
+    double a = dh_line(1);
+    double d = dh_line(2);
+    double thetaRad = deg2rad(dh_line(3));
+    Matrix4d transform{
+        {cos(thetaRad),             -1*sin(thetaRad),             0,                a},
+        {sin(thetaRad)*cos(alfaRad), cos(thetaRad)*cos(alfaRad), -1*sin(alfaRad), -1*sin(alfaRad)*d},
+        {sin(thetaRad)*sin(alfaRad), cos(thetaRad)*sin(alfaRad), cos(alfaRad), cos(alfaRad)*d},
+        {0,                          0,                          0,                 1}
+    };
+    std::cout << "transform:\n" << transform <<std::endl;
+    return transform;
+}
+Matrix4d DhCalculator::calculateEndEffectorPose(MatrixXd dh_matrix){
+    Matrix4d end_pose;
+    return end_pose;
+}
+
 
 int main(int argc, char * argv[])
 {
   rclcpp::init(argc, argv);
-  rclcpp::spin(std::make_shared<MinimalPublisher>());
+  rclcpp::spin(std::make_shared<DhCalculator>());
   rclcpp::shutdown();
   return 0;
 }
