@@ -24,22 +24,23 @@ public:
         // 500ms, std::bind(&DhCalculator::timer_callback, this));
 
         
-        this->declare_parameter("number_of_joints", 0);
-        number_of_joints = get_parameter("number_of_joints").as_int();
+        this->declare_parameter("number_of_elements", 0);
+        number_of_elements = get_parameter("number_of_elements").as_int();
         RCLCPP_INFO(get_logger(), "Number of joints: %d",
-                static_cast<int>(number_of_joints));
+                static_cast<int>(number_of_elements));
 
-        this->declare_parameter("dh_params", std::vector<double>(number_of_joints+1,-1));
+        this->declare_parameter("dh_params", std::vector<double>(number_of_elements,-1));
 
+        // TODO TRATAR CASO DE INPUT INT
         dh_vector = get_parameter("dh_params").as_double_array();
 
         // THIS CODE WAS NOT SUPOSED TO BE ON CONSTRUCTOR
-        if((number_of_joints+1)%4 != 0){    // It is expected that the DH params come in multiples of 4
+        if((number_of_elements)%4 != 0){    // It is expected that the DH params come in multiples of 4
             RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Invalid number of DH parameters");
             // [TODO] THROW ERROR; INTERRUPT
         }
-        int number_of_dh_rows = ((number_of_joints+1)/4);
-        std::cout << "Number of rows:\n" << number_of_dh_rows << std::endl;
+        int number_of_dh_rows = ((number_of_elements)/4);
+        // std::cout << "Number of rows:\n" << number_of_dh_rows << std::endl;
         dh_params.resize(number_of_dh_rows, 4);
         for (int i=0; i<number_of_dh_rows; i++){
             RCLCPP_INFO(get_logger(), "%d", i);
@@ -48,10 +49,8 @@ public:
             dh_params(i, 2) = dh_vector[2 + 4*i];
             dh_params(i, 3) = dh_vector[3 + 4*i];
         }
-        std::cout << "Here is the dh matrix:\n" << dh_params << std::endl;
 
-        Vector4d dh_line{0,0, 100, 90};
-        dh2Transform(dh_line);
+        calculateEndEffectorPose(dh_params, number_of_dh_rows);
     }
 
 private:
@@ -66,10 +65,10 @@ private:
     // rclcpp::Publisher<std_msgs::msg::String>::SharedPtr publisher_;
     // size_t count_;
     std::vector<double> dh_vector;
-    int number_of_joints;
+    int number_of_elements;
     MatrixXd dh_params;
     double deg2rad(double deg);
-    Matrix4d calculateEndEffectorPose(MatrixXd dh_matrix);
+    Matrix4d calculateEndEffectorPose(MatrixXd dh_matrix, int num_of_lines);
     Matrix4d dh2Transform(Vector4d dh_line);
     Matrix4d end_effector_pose;
 };
@@ -88,11 +87,21 @@ Matrix4d DhCalculator::dh2Transform(Vector4d dh_line){
         {sin(thetaRad)*sin(alfaRad), cos(thetaRad)*sin(alfaRad), cos(alfaRad), cos(alfaRad)*d},
         {0,                          0,                          0,                 1}
     };
-    std::cout << "transform:\n" << transform <<std::endl;
+    
     return transform;
 }
-Matrix4d DhCalculator::calculateEndEffectorPose(MatrixXd dh_matrix){
+Matrix4d DhCalculator::calculateEndEffectorPose(MatrixXd dh_matrix, int num_of_lines){
     Matrix4d end_pose;
+    end_pose << MatrixXd::Identity(4,4);
+
+    for(int i=0; i<num_of_lines; i++){
+        Eigen::Vector4d dh_line = dh_matrix.row(i);
+        end_pose *= dh2Transform(dh_line);
+    }
+
+    std::cout << "input dh:\n" << dh_matrix <<std::endl;
+    std::cout << "out put transform:\n" << end_pose <<std::endl;
+
     return end_pose;
 }
 
