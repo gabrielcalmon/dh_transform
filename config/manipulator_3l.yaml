@@ -1,0 +1,5 @@
+# double array
+listener_node:
+  ros__parameters:
+    number_of_links: 3
+    links_lenght: [100.0, 200.0, 300.0]
