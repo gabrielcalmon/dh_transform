@@ -14,6 +14,6 @@ def generate_launch_description():
             name='listener_node',
             parameters=[os.path.join(
                 get_package_share_directory('dh_transform'),
-                'config', 'dh_params.yaml')],
+                'config', 'manipulator_3l.yaml')],
             output='screen'),
     ])
