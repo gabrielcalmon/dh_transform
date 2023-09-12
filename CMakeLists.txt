@@ -13,9 +13,10 @@ find_package(eigen3_cmake_module REQUIRED)
 find_package(Eigen3)
 
 find_package(sensor_msgs REQUIRED)
+find_package(geometry_msgs REQUIRED)
 
 add_executable(listener src/listener.cpp)
-ament_target_dependencies(listener rclcpp std_msgs Eigen3)
+ament_target_dependencies(listener rclcpp std_msgs Eigen3 geometry_msgs)
 
 add_executable(encoder src/encoder.cpp)
 ament_target_dependencies(encoder rclcpp std_msgs sensor_msgs)
