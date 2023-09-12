@@ -36,6 +36,10 @@ public:
         int number_of_dh_rows = static_cast<int>(dh_matrix.rows());
         
         end_effector_pose = calculateEndEffectorPose(dh_matrix, number_of_dh_rows);
+
+        Eigen::Quaterniond end_effector_quaternion(end_effector_pose.block<3,3>(0,0));
+
+        std::cout << "End effector quarternion: " << end_effector_quaternion << std::endl;        
     }
 
 private:
@@ -64,7 +68,7 @@ MatrixXd DhCalculator::calculateDhMatrix(std::vector<double> link_lenghts, std::
         RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "The number of links should be equal to the number of joints");
     }
 
-    MatrixXd dh_matrix(num_joints+1, 4);
+    MatrixXd dh_matrix(num_joints+1, 4);    // a dh matrix has 4 columns and (num_joints+1) rows
     dh_matrix << MatrixXd::Zero(4,4);
     
     for(int i=0; i<=num_joints; i++){
@@ -84,7 +88,7 @@ MatrixXd DhCalculator::calculateDhMatrix(std::vector<double> link_lenghts, std::
 
 Matrix4d DhCalculator::dh2Transform(Vector4d dh_line){
     double alfaRad = deg2rad(dh_line(0));
-    double a = dh_line(1);
+    double a = dh_line(1);  // alpha
     double d = dh_line(2);
     double thetaRad = deg2rad(dh_line(3));
     Matrix4d transform{
