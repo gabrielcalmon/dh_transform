@@ -74,14 +74,14 @@ MatrixXd DhCalculator::calculateDhMatrix(std::vector<double> link_lenghts, std::
     MatrixXd dh_matrix(num_joints+1, 4);    // a dh matrix has 4 columns and (num_joints+1) rows
     dh_matrix << MatrixXd::Zero(num_joints+1,4);
     
-    for(int i=0; i<=num_joints; i++){
-        if(i == 0){     // frame 0 (base)
-            dh_matrix(i,3) = angles[i];
-        } else if (i == num_joints){    // end effector
-            dh_matrix(i,0) = link_lenghts[i];
+    for(int nJoint=0; nJoint<=num_joints; nJoint++){
+        if(nJoint == 0){     // frame 0 (base)
+            dh_matrix(nJoint,3) = angles[nJoint];
+        } else if (nJoint == num_joints){    // end effector
+            dh_matrix(nJoint,0) = link_lenghts[nJoint];
         } else {
-            dh_matrix(i,0) = link_lenghts[i];
-            dh_matrix(i,3) = angles[i];
+            dh_matrix(nJoint,0) = link_lenghts[nJoint];
+            dh_matrix(nJoint,3) = angles[nJoint];
         }
     }
 
@@ -108,8 +108,8 @@ Matrix4d DhCalculator::calculateEndEffectorTransform(MatrixXd dh_matrix, int num
     Matrix4d end_pose;
     end_pose << MatrixXd::Identity(4,4);
 
-    for(int i=0; i<num_of_lines; i++){
-        Vector4d dh_line = dh_matrix.row(i);
+    for(int index=0; index<num_of_lines; index++){
+        Vector4d dh_line = dh_matrix.row(index);
         end_pose *= dh2Transform(dh_line);
     }
 
