@@ -10,8 +10,7 @@ def generate_launch_description():
     return LaunchDescription([
         Node(
             package='dh_transform',
-            executable='listener',
-            name='listener_node',
+            executable='pose_publisher',
             parameters=[os.path.join(
                 get_package_share_directory('dh_transform'),
                 'config', 'manipulator_3l.yaml')],
