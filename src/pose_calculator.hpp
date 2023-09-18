@@ -16,13 +16,6 @@ public:
     PoseCalculator(const std::string & nodeName, int num_links, std::vector<double> l_lengths)
     : Node(nodeName), number_of_links(num_links), link_lengths(l_lengths)
     {
-        // this->declare_parameter("number_of_links", 0);
-        // number_of_links = get_parameter("number_of_links").as_int();
-
-        // // [TODO] TRATAR CASO DE INPUT INT
-        // this->declare_parameter("links_lenght", std::vector<double>(number_of_links,-1));
-        // link_lengths = get_parameter("links_lenght").as_double_array();
-
         // The number of links informed need to match the actual number of link's lengths
         if(number_of_links != int(link_lengths.size())){
             RCLCPP_ERROR(rclcpp::get_logger("rclcpp"),
