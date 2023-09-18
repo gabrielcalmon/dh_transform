@@ -18,6 +18,13 @@ find_package(geometry_msgs REQUIRED)
 find_package(rclcpp_lifecycle REQUIRED)
 find_package(lifecycle_msgs REQUIRED)
 
+find_package(rosidl_default_generators REQUIRED)
+ament_export_dependencies(rosidl_default_runtime)
+
+rosidl_generate_interfaces(${PROJECT_NAME}
+  "srv/AnglesUpdate.srv"
+)
+
 add_executable(encoder src/encoder.cpp)
 ament_target_dependencies(encoder rclcpp std_msgs sensor_msgs)
 
@@ -34,15 +41,20 @@ install(TARGETS
   DESTINATION lib/${PROJECT_NAME}
 )
 
+rosidl_get_typesupport_target(cpp_typesupport_target
+  ${PROJECT_NAME} rosidl_typesupport_cpp)
+
 install(
-  DIRECTORY launch
+  DIRECTORY launch config
   DESTINATION share/${PROJECT_NAME}
 )
 
-install(
-  DIRECTORY config
-  DESTINATION share/${PROJECT_NAME}
-)
+# install(
+#   DIRECTORY config
+#   DESTINATION share/${PROJECT_NAME}
+# )
+
+target_link_libraries(encoder "${cpp_typesupport_target}")
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
