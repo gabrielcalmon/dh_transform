@@ -1,8 +1,0 @@
-# double array
-listener_node:
-  ros__parameters:
-    number_of_elements: 16
-    dh_params: [0.0, 0.0, 100.0, 30.0,
-                90.0, 0.0, 20.0, 0.0,
-                0.0 ,0.0, 200.0, 60.0,
-                0.0, 0.0, 300.0, 0.0]
