@@ -131,14 +131,14 @@ geometry_msgs::msg::Pose PoseCalculator::dh2endEffectorPose(){
 }
 
 void PoseCalculator::printEndEffectorPose(){
-    std::cout << std::endl << "Orientation (Quaternion):" << std::endl;
+    std::cout << std::endl <<"Translation: ";
+    std::cout << this->end_effector_pose.position.x << " x +";
+    std::cout << this->end_effector_pose.position.y << " y +";
+    std::cout << this->end_effector_pose.position.z << " z" << std::endl;
+
+    std::cout << "Orientation (Quaternion): ";
     std::cout << this->end_effector_pose.orientation.x << " x +";
     std::cout << this->end_effector_pose.orientation.y << " y +";
     std::cout << this->end_effector_pose.orientation.z << " z +";
     std::cout << this->end_effector_pose.orientation.w << " w" << std::endl;
-
-    std::cout << "Translation:" << std::endl;
-    std::cout << this->end_effector_pose.position.x << " x +";
-    std::cout << this->end_effector_pose.position.y << " y +";
-    std::cout << this->end_effector_pose.position.z << " z" << std::endl;
 }
