@@ -24,8 +24,12 @@ public:
   publish_pose()
   {
     // auto msg = std::make_unique<std_msgs::msg::String>();
-    auto pose = std::make_unique<geometry_msgs::msg::Pose>();
-    pose->orientation.x = 1.15;
+
+    poseCalculatorObj->calculateDhMatrix(joint_angles_values);
+
+    auto pose = geometry_msgs::msg::Pose();
+    pose = poseCalculatorObj->dh2endEffectorPose();
+    // pose->orientation.x = 1.15;
 
     // msg->data = "Lifecycle Hello World" + std::to_string(++count);
 
@@ -34,11 +38,12 @@ public:
       RCLCPP_INFO(
         get_logger(), "Lifecycle publisher currently inactive");
     }
-    // else
-    // {
-    //   RCLCPP_INFO(
-    //     get_logger(), "Lifecycle publisher active. Publishing [%f]", pose->orientation.x);
-    // }
+    else
+    {
+      poseCalculatorObj->printEndEffectorPose();
+      // RCLCPP_INFO(
+      //   get_logger(), "Lifecycle publisher active. Publishing [%f]", pose->orientation.x);
+    }
 
     publisher->publish(std::move(pose));
   }
