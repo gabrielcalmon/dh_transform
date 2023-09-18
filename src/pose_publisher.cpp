@@ -23,15 +23,10 @@ public:
   void
   publish_pose()
   {
-    // auto msg = std::make_unique<std_msgs::msg::String>();
-
     poseCalculatorObj->calculateDhMatrix(joint_angles_values);
 
     auto pose = geometry_msgs::msg::Pose();
     pose = poseCalculatorObj->dh2endEffectorPose();
-    // pose->orientation.x = 1.15;
-
-    // msg->data = "Lifecycle Hello World" + std::to_string(++count);
 
     if (!publisher->is_activated())
     {
@@ -41,8 +36,6 @@ public:
     else
     {
       poseCalculatorObj->printEndEffectorPose();
-      // RCLCPP_INFO(
-      //   get_logger(), "Lifecycle publisher active. Publishing [%f]", pose->orientation.x);
     }
 
     publisher->publish(std::move(pose));
@@ -86,11 +79,6 @@ public:
   { 
     publisher->on_activate();
     RCLCPP_INFO(get_logger(),"on_activate() called");
-    
-    // std::vector<double> initial_angles = std::vector<double>(3, 0);
-    // poseCalculatorObj->calculateDhMatrix(initial_angles);
-
-    // std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 
     return rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn::SUCCESS;
   }
@@ -134,12 +122,9 @@ private:
 
   void joint_angles_callback(const sensor_msgs::msg::JointState::SharedPtr joint_state)
   {
-    // RCLCPP_INFO(this->get_logger(), "I heard a joint_state msg");
     for(int joint=0; joint < number_of_links; joint++){
       joint_angles_values[joint]=joint_state->position[joint];
-      // std::cout << joint_angles_values[joint] << " ";
     }
-    // std::cout << std::endl;
   }
 
 };

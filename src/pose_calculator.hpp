@@ -30,10 +30,6 @@ public:
         //initial joint angles are equal to zero
         std::vector<double> initial_angles = std::vector<double>(number_of_links, 0);
         this->dh_matrix = calculateDhMatrix(initial_angles);
-
-        // TESTES
-        // this->end_effector_pose = dh2endEffectorPose();
-        // printEndEffectorPose();
     }
 
     MatrixXd calculateDhMatrix(std::vector<double> angles);
@@ -146,11 +142,3 @@ void PoseCalculator::printEndEffectorPose(){
     std::cout << this->end_effector_pose.position.y << " y +";
     std::cout << this->end_effector_pose.position.z << " z" << std::endl;
 }
-
-// int main(int argc, char * argv[])
-// {
-//   rclcpp::init(argc, argv);
-//   rclcpp::spin(std::make_shared<PoseCalculator>("minimal_publisher"));
-//   rclcpp::shutdown();
-//   return 0;
-// }
