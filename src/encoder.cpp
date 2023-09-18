@@ -6,12 +6,15 @@
 #include "sensor_msgs/msg/joint_state.hpp"
 #include "dh_transform/srv/angles_update.hpp"
 
-// This classes simulates a group of joint encoder's, publishing the angular postion
+// This classes simulates a group of joint encoder's, publishing the angular position
 class FakeEncoderPublisher : public rclcpp::Node {
 public:
     FakeEncoderPublisher(int n_joints, double j_value) : 
     Node("fake_encoder_publisher"), num_joints(n_joints), default_joints_value(j_value)
     {
+        this->declare_parameter("number_of_links", 0);
+        int number_of_links = get_parameter("number_of_links").as_int();
+
         publisher_ = this->create_publisher<sensor_msgs::msg::JointState>("/joint_angles", 10);
         timer_ = this->create_wall_timer(std::chrono::milliseconds(10), std::bind(&FakeEncoderPublisher::publish_sensor_values, this));
 

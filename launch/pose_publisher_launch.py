@@ -19,6 +19,9 @@ def generate_launch_description():
         Node(
             package='dh_transform',
             executable='encoder',
+            parameters=[os.path.join(
+                get_package_share_directory('dh_transform'),
+                'config', 'manipulator_3l.yaml')],
             output='screen'),
 
         Node(
