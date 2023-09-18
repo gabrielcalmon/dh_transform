@@ -48,13 +48,13 @@ public:
   {
     // declare and read parameters
     this->declare_parameter("publication_frequency_hz", 1.0);
-    double publication_frequency_hz = get_parameter("publication_frequency_hz").as_double();
-
     this->declare_parameter("number_of_links", 0);
+    this->declare_parameter("links_lenght", std::vector<double>(number_of_links,-1));
+
+    double publication_frequency_hz = get_parameter("publication_frequency_hz").as_double();
     number_of_links = get_parameter("number_of_links").as_int();
 
     // [TODO] TRATAR CASO DE INPUT INT
-    this->declare_parameter("links_lenght", std::vector<double>(number_of_links,-1));
     std::vector<double> link_lengths = get_parameter("links_lenght").as_double_array();
 
     // initialize class variables
@@ -132,9 +132,9 @@ private:
     // RCLCPP_INFO(this->get_logger(), "I heard a joint_state msg");
     for(int joint=0; joint < number_of_links; joint++){
       joint_angles_values[joint]=joint_state->position[joint];
-      std::cout << joint_angles_values[joint] << " ";
+      // std::cout << joint_angles_values[joint] << " ";
     }
-    std::cout << std::endl;
+    // std::cout << std::endl;
   }
 
 };
