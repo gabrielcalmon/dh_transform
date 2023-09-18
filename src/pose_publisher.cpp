@@ -56,7 +56,7 @@ public:
     std::vector<double> link_lengths = get_parameter("links_lenght").as_double_array();
 
     // initialize class variables
-    poseCalculatorObj = std::make_unique<PoseCalculator>("name", number_of_links, link_lengths);
+    poseCalculatorObj = std::make_unique<PoseCalculator>("pose_calculator", number_of_links, link_lengths);
     joint_angles_values = std::vector<double>(number_of_links, 0);
 
     // configure publish and subscription
@@ -126,7 +126,6 @@ private:
       joint_angles_values[joint]=joint_state->position[joint];
     }
   }
-
 };
 
 int main(int argc, char * argv[])
