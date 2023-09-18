@@ -38,6 +38,7 @@ public:
 
     MatrixXd calculateDhMatrix(std::vector<double> angles);
     geometry_msgs::msg::Pose dh2endEffectorPose();
+    void printEndEffectorPose();
 
 private:
     int number_of_links;
@@ -51,7 +52,7 @@ private:
     Matrix4d dh2Transform(Vector4d dh_line);
     Matrix4d calculateEndEffectorTransform(int num_of_lines);
     geometry_msgs::msg::Pose endEffectorTransformToPose(Matrix4d end_effector_transform);
-    void printEndEffectorPose();
+    
 };
 
 double PoseCalculator::deg2rad(double deg){
@@ -134,7 +135,7 @@ geometry_msgs::msg::Pose PoseCalculator::dh2endEffectorPose(){
 }
 
 void PoseCalculator::printEndEffectorPose(){
-    std::cout << "Orientation (Quaternion):" << std::endl;
+    std::cout << std::endl << "Orientation (Quaternion):" << std::endl;
     std::cout << this->end_effector_pose.orientation.x << " x +";
     std::cout << this->end_effector_pose.orientation.y << " y +";
     std::cout << this->end_effector_pose.orientation.z << " z +";
