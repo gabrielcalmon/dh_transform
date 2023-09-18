@@ -1,0 +1,6 @@
+# double array
+pose_publisher:
+  ros__parameters:
+    publication_frequency_hz: 1.0
+    number_of_links: 5
+    links_lenght: [0.1, 0.2, 0.3, 0.5, 0.7]
