@@ -67,9 +67,9 @@ MatrixXd PoseCalculator::calculateDhMatrix(std::vector<double> angles){
         if(nJoint == 0){                     // frame 0 (base)
             this->dh_matrix(nJoint,3) = angles[nJoint];
         } else if (nJoint == num_joints){    // end effector
-            this->dh_matrix(nJoint,0) = this->link_lengths[nJoint];
+            this->dh_matrix(nJoint,0) = this->link_lengths[nJoint-1];
         } else {
-            this->dh_matrix(nJoint,0) = this->link_lengths[nJoint];
+            this->dh_matrix(nJoint,0) = this->link_lengths[nJoint-1];
             this->dh_matrix(nJoint,3) = angles[nJoint];
         }
     }
@@ -79,8 +79,8 @@ MatrixXd PoseCalculator::calculateDhMatrix(std::vector<double> angles){
 }
 
 Matrix4d PoseCalculator::dh2Transform(Vector4d dh_line){
-    double alfaRad = deg2rad(dh_line(0));
-    double a = dh_line(1);
+    double a = dh_line(0);
+    double alfaRad = deg2rad(dh_line(1));
     double d = dh_line(2);
     double thetaRad = deg2rad(dh_line(3));
     Matrix4d transform{
@@ -108,6 +108,7 @@ Matrix4d PoseCalculator::calculateEndEffectorTransform(int num_of_lines){
 }
 
 geometry_msgs::msg::Pose PoseCalculator::endEffectorTransformToPose(Matrix4d end_effector_transform){
+    std::cout << "output transform:\n" << end_effector_transform <<std::endl;
     Eigen::Quaterniond end_effector_quaternion(end_effector_transform.block<3,3>(0,0));
     this->end_effector_pose.orientation.x = end_effector_quaternion.x();
     this->end_effector_pose.orientation.y = end_effector_quaternion.y();
