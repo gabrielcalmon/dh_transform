@@ -34,11 +34,11 @@ public:
       RCLCPP_INFO(
         get_logger(), "Lifecycle publisher currently inactive");
     }
-    else
-    {
-      RCLCPP_INFO(
-        get_logger(), "Lifecycle publisher active. Publishing [%f]", pose->orientation.x);
-    }
+    // else
+    // {
+    //   RCLCPP_INFO(
+    //     get_logger(), "Lifecycle publisher active. Publishing [%f]", pose->orientation.x);
+    // }
 
     publisher->publish(std::move(pose));
   }
@@ -46,19 +46,23 @@ public:
   rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn
   on_configure(const rclcpp_lifecycle::State &)
   {
+    // declare and read parameters
     this->declare_parameter("publication_frequency_hz", 1.0);
     double publication_frequency_hz = get_parameter("publication_frequency_hz").as_double();
 
     this->declare_parameter("number_of_links", 0);
-    int number_of_links = get_parameter("number_of_links").as_int();
+    number_of_links = get_parameter("number_of_links").as_int();
 
     // [TODO] TRATAR CASO DE INPUT INT
     this->declare_parameter("links_lenght", std::vector<double>(number_of_links,-1));
     std::vector<double> link_lengths = get_parameter("links_lenght").as_double_array();
 
+    // initialize class variables
     poseCalculatorObj = std::make_unique<PoseCalculator>("name", number_of_links, link_lengths);
+    joint_angles_values = std::vector<double>(number_of_links, 0);
 
-    int64_t publication_rate_ms = static_cast<int64_t>(1000.0/publication_frequency_hz);  // Converte para int64_t
+    // configure publish and subscription
+    int64_t publication_rate_ms = static_cast<int64_t>(1000.0/publication_frequency_hz);
 
     publisher = this->create_publisher<geometry_msgs::msg::Pose>("/end_effector_pose",10);
     timer = this->create_wall_timer(
@@ -118,12 +122,19 @@ private:
   std::shared_ptr<rclcpp::TimerBase> timer;
 
   rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr subscription_;
+  std::vector<double> joint_angles_values;
+  int number_of_links;
 
   std::unique_ptr<PoseCalculator> poseCalculatorObj;
 
-  void joint_angles_callback(const sensor_msgs::msg::JointState::SharedPtr joint_state) const
+  void joint_angles_callback(const sensor_msgs::msg::JointState::SharedPtr joint_state)
   {
     // RCLCPP_INFO(this->get_logger(), "I heard a joint_state msg");
+    for(int joint=0; joint < number_of_links; joint++){
+      joint_angles_values[joint]=joint_state->position[joint];
+      std::cout << joint_angles_values[joint] << " ";
+    }
+    std::cout << std::endl;
   }
 
 };
