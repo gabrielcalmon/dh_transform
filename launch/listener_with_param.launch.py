@@ -15,4 +15,14 @@ def generate_launch_description():
                 get_package_share_directory('dh_transform'),
                 'config', 'manipulator_3l.yaml')],
             output='screen'),
+
+        Node(
+            package='dh_transform',
+            executable='encoder',
+            output='screen'),
+
+        Node(
+            package='dh_transform',
+            executable='service_client_lifecycle',
+            output='screen'),
     ])
