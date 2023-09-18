@@ -22,7 +22,7 @@ add_executable(encoder src/encoder.cpp)
 ament_target_dependencies(encoder rclcpp std_msgs sensor_msgs)
 
 add_executable(pose_publisher src/pose_publisher.cpp)
-ament_target_dependencies(pose_publisher rclcpp rclcpp_lifecycle lifecycle_msgs std_msgs Eigen3 geometry_msgs)
+ament_target_dependencies(pose_publisher rclcpp rclcpp_lifecycle lifecycle_msgs std_msgs Eigen3 geometry_msgs sensor_msgs)
 
 add_executable(service_client_lifecycle src/service_client_lifecycle.cpp)
 ament_target_dependencies(service_client_lifecycle lifecycle_msgs rclcpp_lifecycle std_msgs)

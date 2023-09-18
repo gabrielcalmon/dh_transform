@@ -5,6 +5,7 @@
 
 #include "std_msgs/msg/string.hpp"
 #include "geometry_msgs/msg/pose.hpp"
+#include "sensor_msgs/msg/joint_state.hpp"
 
 #include "pose_calculator.hpp"
 
@@ -35,8 +36,6 @@ public:
     }
     else
     {
-      // RCLCPP_INFO(
-      //   get_logger(), "Lifecycle publisher active. Publishing [%s]", msg->data.c_str());
       RCLCPP_INFO(
         get_logger(), "Lifecycle publisher active. Publishing [%f]", pose->orientation.x);
     }
@@ -60,6 +59,9 @@ public:
     timer = this->create_wall_timer(
       std::chrono::milliseconds(1000), std::bind(&PosePublisher::publish_pose, this));
 
+    subscription_ = this->create_subscription<sensor_msgs::msg::JointState>(
+      "/joint_angles", 10, std::bind(&PosePublisher::joint_angles_callback, this, std::placeholders::_1));
+
     RCLCPP_INFO(get_logger(),"on_configure() called");
 
     return rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn::SUCCESS;
@@ -70,8 +72,11 @@ public:
   { 
     publisher->on_activate();
     RCLCPP_INFO(get_logger(),"on_activate() called");
+    
+    // std::vector<double> initial_angles = std::vector<double>(3, 0);
+    // poseCalculatorObj->calculateDhMatrix(initial_angles);
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+    // std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 
     return rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn::SUCCESS;
   }
@@ -107,10 +112,14 @@ private:
   std::shared_ptr<rclcpp_lifecycle::LifecyclePublisher<geometry_msgs::msg::Pose>> publisher;
   std::shared_ptr<rclcpp::TimerBase> timer;
 
-  // PoseCalculator poseCalculatorObj;
+  rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr subscription_;
+
   std::unique_ptr<PoseCalculator> poseCalculatorObj;
 
-
+  void joint_angles_callback(const sensor_msgs::msg::JointState::SharedPtr joint_state) const
+  {
+    // RCLCPP_INFO(this->get_logger(), "I heard a joint_state msg");
+  }
 
 };
 
