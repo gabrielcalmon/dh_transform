@@ -46,6 +46,9 @@ public:
   rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn
   on_configure(const rclcpp_lifecycle::State &)
   {
+    this->declare_parameter("publication_frequency_hz", 1.0);
+    double publication_frequency_hz = get_parameter("publication_frequency_hz").as_double();
+
     this->declare_parameter("number_of_links", 0);
     int number_of_links = get_parameter("number_of_links").as_int();
 
@@ -55,9 +58,11 @@ public:
 
     poseCalculatorObj = std::make_unique<PoseCalculator>("name", number_of_links, link_lengths);
 
+    int64_t publication_rate_ms = static_cast<int64_t>(1000.0/publication_frequency_hz);  // Converte para int64_t
+
     publisher = this->create_publisher<geometry_msgs::msg::Pose>("/end_effector_pose",10);
     timer = this->create_wall_timer(
-      std::chrono::milliseconds(1000), std::bind(&PosePublisher::publish_pose, this));
+      std::chrono::milliseconds(publication_rate_ms), std::bind(&PosePublisher::publish_pose, this));
 
     subscription_ = this->create_subscription<sensor_msgs::msg::JointState>(
       "/joint_angles", 10, std::bind(&PosePublisher::joint_angles_callback, this, std::placeholders::_1));
