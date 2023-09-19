@@ -3,6 +3,7 @@
 #include <memory>
 #include <string>
 #include <Eigen/Dense>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
 
 #include "rclcpp/rclcpp.hpp"
 #include "std_msgs/msg/string.hpp"
@@ -34,9 +35,10 @@ public:
 
     MatrixXd calculateDhMatrix(std::vector<double> angles);
     geometry_msgs::msg::Pose dh2endEffectorPose();
-    void printEndEffectorPose();
+    void printEndEffectorPose(bool quaternion_angles);
 
 private:
+    // properties
     int number_of_links;
     std::vector<double> link_lengths;
 
@@ -45,6 +47,7 @@ private:
 
     // Methods
     double deg2rad(double deg);
+    double rad2deg(double rad);
     Matrix4d dh2Transform(Vector4d dh_line);
     Matrix4d calculateEndEffectorTransform(int num_of_lines);
     geometry_msgs::msg::Pose endEffectorTransformToPose(Matrix4d end_effector_transform);
@@ -53,6 +56,10 @@ private:
 
 double PoseCalculator::deg2rad(double deg){
     return deg*M_PI/180;
+}
+
+double PoseCalculator::rad2deg(double rad){
+    return rad*180/M_PI;
 }
 
 MatrixXd PoseCalculator::calculateDhMatrix(std::vector<double> angles){
@@ -131,15 +138,31 @@ geometry_msgs::msg::Pose PoseCalculator::dh2endEffectorPose(){
     return endEffectorTransformToPose(eff_pose);
 }
 
-void PoseCalculator::printEndEffectorPose(){
+void PoseCalculator::printEndEffectorPose(bool quaternion_angles=false){
     std::cout << std::endl <<"Translation: ";
     std::cout << this->end_effector_pose.position.x << " x +";
     std::cout << this->end_effector_pose.position.y << " y +";
     std::cout << this->end_effector_pose.position.z << " z" << std::endl;
 
-    std::cout << "Orientation (Quaternion): ";
-    std::cout << this->end_effector_pose.orientation.x << " x +";
-    std::cout << this->end_effector_pose.orientation.y << " y +";
-    std::cout << this->end_effector_pose.orientation.z << " z +";
-    std::cout << this->end_effector_pose.orientation.w << " w" << std::endl;
+    if(quaternion_angles){
+        std::cout << "Orientation (Quaternion): ";
+        std::cout << this->end_effector_pose.orientation.x << " x +";
+        std::cout << this->end_effector_pose.orientation.y << " y +";
+        std::cout << this->end_effector_pose.orientation.z << " z +";
+        std::cout << this->end_effector_pose.orientation.w << " w" << std::endl;
+    } else {
+        tf2::Quaternion q(
+        this->end_effector_pose.orientation.x,
+        this->end_effector_pose.orientation.y,
+        this->end_effector_pose.orientation.z,
+        this->end_effector_pose.orientation.w);
+        tf2::Matrix3x3 m(q);
+        double roll, pitch, yaw;
+        m.getRPY(roll, pitch, yaw);
+
+        std::cout << "Orientation (RPY - degrees): ";
+        std::cout << rad2deg(roll) << " x +";
+        std::cout << rad2deg(pitch) << " y +";
+        std::cout << rad2deg(yaw) << " z" << std::endl;
+    }
 }
