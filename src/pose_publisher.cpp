@@ -9,6 +9,7 @@
 
 #include "pose_calculator.hpp"
 
+// This classes uses the PoseCalculator class to get the end effector pose and is managed by the life cycle
 class PosePublisher : public rclcpp_lifecycle::LifecycleNode
 {
 public:
@@ -18,11 +19,12 @@ public:
     rclcpp::NodeOptions().use_intra_process_comms(intraProcessComms)
   )
   {
+    RCLCPP_INFO(get_logger(), "Then node '%s' from PosePublisher class was successfully initialized", nodeName.c_str());
   }
 
-  void
-  publish_pose()
+  void publish_pose()
   {
+    // Recalculate the DH matrix based on the new joint angles
     poseCalculatorObj->calculateDhMatrix(joint_angles_values);
 
     auto pose = geometry_msgs::msg::Pose();
@@ -30,8 +32,7 @@ public:
 
     if (!publisher->is_activated())
     {
-      RCLCPP_INFO(
-        get_logger(), "Lifecycle publisher currently inactive");
+      RCLCPP_INFO(get_logger(), "Lifecycle publisher currently inactive");
     }
     else
     {
