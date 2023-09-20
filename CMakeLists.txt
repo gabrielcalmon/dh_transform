@@ -50,23 +50,24 @@ install(
   DESTINATION share/${PROJECT_NAME}
 )
 
-# install(
-#   DIRECTORY config
-#   DESTINATION share/${PROJECT_NAME}
-# )
-
 target_link_libraries(encoder "${cpp_typesupport_target}")
 
+# Configure tests if BUILD_TESTING option is enabled
 if(BUILD_TESTING)
-  find_package(ament_lint_auto REQUIRED)
-  # the following line skips the linter which checks for copyrights
-  # comment the line when a copyright and license is added to all source files
-  set(ament_cmake_copyright_FOUND TRUE)
-  # the following line skips cpplint (only works in a git repo)
-  # comment the line when this package is in a git repo and when
-  # a copyright and license is added to all source files
-  set(ament_cmake_cpplint_FOUND TRUE)
-  ament_lint_auto_find_test_dependencies()
+    ament_add_gtest(dh_calculator_test test/dh_calculator_test.cpp)
+    # Add other tests as needed
+
+    target_include_directories(dh_calculator_test PRIVATE src)
+    ament_target_dependencies(dh_calculator_test
+      rclcpp
+      rclcpp_lifecycle
+      lifecycle_msgs
+      std_msgs 
+      Eigen3
+      geometry_msgs
+      sensor_msgs
+      tf2_geometry_msgs
+    )
 endif()
 
 ament_package()
