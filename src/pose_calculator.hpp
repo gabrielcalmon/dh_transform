@@ -81,7 +81,6 @@ MatrixXd PoseCalculator::calculateDhMatrix(std::vector<double> angles){
         }
     }
 
-    // std::cout << "output dh matrix:\n" << this->dh_matrix <<std::endl;
     return this->dh_matrix;
 }
 
@@ -109,13 +108,10 @@ Matrix4d PoseCalculator::calculateEndEffectorTransform(int num_of_lines){
         end_pose *= dh2Transform(dh_line);
     }
 
-    // std::cout << "output transform:\n" << end_pose <<std::endl;
-
     return end_pose;
 }
 
 geometry_msgs::msg::Pose PoseCalculator::endEffectorTransformToPose(Matrix4d end_effector_transform){
-    std::cout << "output transform:\n" << end_effector_transform <<std::endl;
     Eigen::Quaterniond end_effector_quaternion(end_effector_transform.block<3,3>(0,0));
     this->end_effector_pose.orientation.x = end_effector_quaternion.x();
     this->end_effector_pose.orientation.y = end_effector_quaternion.y();
@@ -134,7 +130,6 @@ geometry_msgs::msg::Pose PoseCalculator::dh2endEffectorPose(){
 
     Matrix4d eff_pose = calculateEndEffectorTransform(number_of_dh_rows);
 
-    // std::cout << "End effector pose: " << std::endl << eff_pose << std::endl;
     return endEffectorTransformToPose(eff_pose);
 }
 
