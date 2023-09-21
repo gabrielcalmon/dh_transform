@@ -4,7 +4,7 @@
 double dh_tolerance = 1E-5;     // Absolute error
 double pose_tolerance = 1E-3;
 
-TEST(PoseCalculatorTests, DHcalculate1){
+TEST(PoseCalculatorTests, CalculateDHparametersThreeLinksZeroAngles){
     int number_of_links = 3;
     std::vector<double> joint_angles_values = std::vector<double>(number_of_links, 0);
     std::vector<double> link_lengths = {0.1, 0.2, 0.3};
@@ -25,10 +25,10 @@ TEST(PoseCalculatorTests, DHcalculate1){
       for(int column=0; column<4; column++){
         EXPECT_NEAR(result_dh(row, column), expected_dh(row, column), dh_tolerance);
       }
-    }  
+    }
 }
 
-TEST(PoseCalculatorTests, DHcalculate2){
+TEST(PoseCalculatorTests, CalculateDHparametersThreeLinksNonZeroAngles){
     int number_of_links = 3;
     std::vector<double> joint_angles_values = {30, 45, 60};
     std::vector<double> link_lengths = {0.115, 0.293, 0.365};
@@ -52,7 +52,7 @@ TEST(PoseCalculatorTests, DHcalculate2){
     }  
 }
 
-TEST(PoseCalculatorTests, DHcalculate3){
+TEST(PoseCalculatorTests, CalculateDHparametersSixLinksNonZeroAngles){
     int number_of_links = 6;
     std::vector<double> joint_angles_values = {30, 45, 60, 45, 30, 60};
     std::vector<double> link_lengths = {0.1, 0.2, 0.3, 0.4, 0.5, 0.6};
@@ -76,10 +76,10 @@ TEST(PoseCalculatorTests, DHcalculate3){
       for(int column=0; column<4; column++){
         EXPECT_NEAR(result_dh(row, column), expected_dh(row, column), dh_tolerance);
       }
-    }  
+    }
 }
 
-TEST(PoseCalculatorTests, DH2Pose1){
+TEST(PoseCalculatorTests, CalculateEndEffectorPoseThreeLinks){
     int number_of_links = 3;
     std::vector<double> joint_angles_values = {5, 15, 90};;
     std::vector<double> link_lengths = {0.1, 0.2, 0.3};
@@ -112,7 +112,7 @@ TEST(PoseCalculatorTests, DH2Pose1){
     EXPECT_NEAR(result_pose.orientation.w, expected_pose.orientation.w, pose_tolerance);
 }
 
-TEST(PoseCalculatorTests, DH2Pose2){
+TEST(PoseCalculatorTests, CalculateEndEffectorPoseSixLinks){
     int number_of_links = 6;
     std::vector<double> joint_angles_values = {30, 45, 60, 45, 30, 60};
     std::vector<double> link_lengths = {0.1, 0.2, 0.3, 0.4, 0.5, 0.6};
@@ -145,7 +145,7 @@ TEST(PoseCalculatorTests, DH2Pose2){
     EXPECT_NEAR(result_pose.orientation.w, expected_pose.orientation.w, pose_tolerance);
 }
 
-int main(int argc, char** argv) {
+int main(int argc, char** argv){
   rclcpp::init(argc, argv);
   ::testing::InitGoogleTest(&argc, argv);
   int result = RUN_ALL_TESTS();
