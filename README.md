@@ -30,6 +30,21 @@ $ ros2 service call /update_angles dh_transform/srv/AnglesUpdate "{angles: [1.0,
 ### Pose Calculator
 This class has the mathematical implementation of the forward kinematics operations. So, it takes the number of manipulator's links and their respective lengths. After this, it is possible to obtain the DH matrix that describe the manipulator.
 
+### Pose publisher
+This node gets the published angles and use the *Pose Calculator* methods to obtain and publish the end effector pose.
+
+### Service client lifecycle
+This service is responsible for trigger the transitions for the *pose_publisher* node. For now, the logic implemented consist in trigger the configure and the activation transitions if everything is alright. 
+```bash
+$ ros2 run dh_transform service_client_lifecycle.py
+```
+
+## Usage
+For simplicity, there are a launch that start the executables *encoder*, the *pose_publisher* and the *service_client_lifecycle* at once. Notice that this launch also pass the manipulator description to the *pose_publisher*.
+```bash
+$ ros2 launch dh_transform pose_publisher_launch.py
+```
+
 ## Tests
 When implement new features or modifying the existing code, it is important to validate the expected code behaver both in the new implementation and in the existing features. So, to accomplish this, run the tests. First of all build the package.
 
