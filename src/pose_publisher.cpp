@@ -137,13 +137,18 @@ int main(int argc, char * argv[])
 
   rclcpp::executors::SingleThreadedExecutor executor;
 
-  std::shared_ptr<PosePublisher> lc_publisher_node = std::make_shared<PosePublisher>("pose_publisher");
+  try{
+    std::shared_ptr<PosePublisher> lc_publisher_node = std::make_shared<PosePublisher>("pose_publisher");
 
-  executor.add_node(lc_publisher_node->get_node_base_interface());
+    executor.add_node(lc_publisher_node->get_node_base_interface());
+    
+    executor.spin();
 
-  executor.spin();
-
-  rclcpp::shutdown();
+    rclcpp::shutdown();
+  } catch (const std::exception& e) {
+    RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), e.what());
+    rclcpp::shutdown();
+  }
 
   return 0;
 }
