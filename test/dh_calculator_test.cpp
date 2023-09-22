@@ -1,5 +1,6 @@
-#include "../include/pose_calculator.hpp"
 #include "gtest/gtest.h"
+
+#include "../include/pose_calculator.hpp"
 
 double dh_tolerance = 1E-5;     // Absolute error
 double pose_tolerance = 1E-3;
@@ -143,6 +144,33 @@ TEST(PoseCalculatorTests, CalculateEndEffectorPoseSixLinks){
     EXPECT_NEAR(result_pose.orientation.y, expected_pose.orientation.y, pose_tolerance);
     EXPECT_NEAR(result_pose.orientation.z, expected_pose.orientation.z, pose_tolerance);
     EXPECT_NEAR(result_pose.orientation.w, expected_pose.orientation.w, pose_tolerance);
+}
+
+TEST(PoseCalculatorTests, PoseCalculatorNegativeLinkLengthException){
+    int number_of_links = 3;
+    std::vector<double> joint_angles_values = std::vector<double>(number_of_links, 0);
+    std::vector<double> link_lengths = {0.1, -0.2, 0.3};
+
+    EXPECT_THROW(PoseCalculator poseCalculatorObj(
+      "test_node", number_of_links, link_lengths), NegativeLinkLengthException);
+}
+
+TEST(PoseCalculatorTests, PoseCalculatorInvalidLinkNumberGreaterLengths){
+    int number_of_links = 3;
+    std::vector<double> joint_angles_values = std::vector<double>(number_of_links, 0);
+    std::vector<double> link_lengths = {0.1, 0.2, 0.3, 0.4};
+
+    EXPECT_THROW(PoseCalculator poseCalculatorObj(
+      "test_node", number_of_links, link_lengths), InvalidLinkNumberException);
+}
+
+TEST(PoseCalculatorTests, PoseCalculatorInvalidLinkNumberExceptionGreaterNumberLinks){
+    int number_of_links = 4;
+    std::vector<double> joint_angles_values = std::vector<double>(number_of_links, 0);
+    std::vector<double> link_lengths = {0.1, 0.2, 0.3};
+
+    EXPECT_THROW(PoseCalculator poseCalculatorObj(
+      "test_node", number_of_links, link_lengths), InvalidLinkNumberException);
 }
 
 int main(int argc, char** argv){
