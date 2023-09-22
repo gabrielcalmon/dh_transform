@@ -1,4 +1,3 @@
-# double array
 pose_publisher:
   ros__parameters:
     publication_frequency_hz: 1.0
