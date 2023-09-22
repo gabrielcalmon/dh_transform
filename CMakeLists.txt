@@ -46,7 +46,7 @@ rosidl_get_typesupport_target(cpp_typesupport_target
   ${PROJECT_NAME} rosidl_typesupport_cpp)
 
 install(
-  DIRECTORY launch config
+  DIRECTORY launch config include
   DESTINATION share/${PROJECT_NAME}
 )
 

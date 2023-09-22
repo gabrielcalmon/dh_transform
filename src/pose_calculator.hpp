@@ -9,6 +9,8 @@
 #include "std_msgs/msg/string.hpp"
 #include "geometry_msgs/msg/pose.hpp"
 
+#include "../include/pose_calculator_exceptions.hpp"
+
 using Eigen::MatrixXd, Eigen::Matrix4d, Eigen::Vector4d, Eigen::VectorXd;
 
 class PoseCalculator : public rclcpp::Node
@@ -19,9 +21,14 @@ public:
     {
         // The number of links informed need to match the actual number of link's lengths
         if(number_of_links != int(link_lengths.size())){
-            RCLCPP_ERROR(rclcpp::get_logger("rclcpp"),
-                "The number of links passed doesn't match the number of lengths");
-            // [TODO] THROW ERROR; INTERRUPT CODE
+            throw InvalidLinkNumberException("The number of links passed doesn't match the number of lengths");
+        }
+
+        // Check for negative link lengths
+        for (double length : link_lengths) {
+            if (length < 0) {
+                throw NegativeLinkLengthException("Negative link length detected");
+            }
         }
 
         // initialize DH matrix with zeros
