@@ -16,13 +16,15 @@ public:
         int number_of_links = get_parameter("number_of_links").as_int();
 
         publisher_ = this->create_publisher<sensor_msgs::msg::JointState>("/joint_angles", 10);
-        timer_ = this->create_wall_timer(std::chrono::milliseconds(10), std::bind(&FakeEncoderPublisher::publish_sensor_values, this));
+        timer_ = this->create_wall_timer(std::chrono::milliseconds(10), std::bind(
+            &FakeEncoderPublisher::publish_sensor_values, this));
 
         fake_deg_values = std::vector<double>(num_joints, default_joints_value);
 
-        // Crie um serviço para receber atualizações do vetor de dados
+        // Create a service to receive data vector updates
         update_angles_service_ = this->create_service<dh_transform::srv::AnglesUpdate>(
-            "update_angles", std::bind(&FakeEncoderPublisher::updateAnglesCallback, this, std::placeholders::_1, std::placeholders::_2));
+            "update_angles", std::bind(&FakeEncoderPublisher::updateAnglesCallback, this,
+                std::placeholders::_1, std::placeholders::_2));
     }
 
     // Service used to update joint angles in runtime

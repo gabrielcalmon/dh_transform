@@ -74,7 +74,8 @@ MatrixXd PoseCalculator::calculateDhMatrix(std::vector<double> angles){
     int num_joints = angles.size();
 
     if(num_links != num_joints){
-        RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "The number of links should be equal to the number of joints");
+        RCLCPP_ERROR(rclcpp::get_logger("rclcpp"),
+            "The number of links should be equal to the number of joints");
     }    
     
     for(int nJoint=0; nJoint<=num_joints; nJoint++){

@@ -20,7 +20,8 @@ public:
     rclcpp::NodeOptions().use_intra_process_comms(intraProcessComms)
   )
   {
-    RCLCPP_INFO(get_logger(), "Then node '%s' from PosePublisher class was successfully initialized", nodeName.c_str());
+    RCLCPP_INFO(get_logger(),
+      "Then node '%s' from PosePublisher class was successfully initialized", nodeName.c_str());
   }
 
   void publish_pose()
@@ -57,9 +58,9 @@ public:
     // [TODO] TRATAR CASO DE INPUT INT
     std::vector<double> link_lengths = get_parameter("links_lenght").as_double_array();
 
-    // Check for invalid data types in link_lengths (int or float)
+    // Check for invalid data type in link_lengths (int)
     for (double length : link_lengths) {
-        if (!std::is_same<double, decltype(length)>::value && !std::is_floating_point<decltype(length)>::value) {
+        if (!std::is_same<double, decltype(length)>::value) {
             throw InvalidDataTypeException("Invalid data type detected in link_lengths");
         }
     }
