@@ -7,7 +7,7 @@
 #include "geometry_msgs/msg/pose.hpp"
 #include "sensor_msgs/msg/joint_state.hpp"
 
-#include "pose_calculator.hpp"
+#include "../include/pose_calculator.hpp"
 #include "../include/pose_publisher_exceptions.hpp"
 
 // This classes uses the PoseCalculator class to get the end effector pose and is managed by the life cycle

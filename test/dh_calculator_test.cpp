@@ -1,4 +1,4 @@
-#include "pose_calculator.hpp"
+#include "../include/pose_calculator.hpp"
 #include "gtest/gtest.h"
 
 double dh_tolerance = 1E-5;     // Absolute error
