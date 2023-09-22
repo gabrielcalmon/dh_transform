@@ -8,6 +8,7 @@
 #include "sensor_msgs/msg/joint_state.hpp"
 
 #include "pose_calculator.hpp"
+#include "../include/pose_publisher_exceptions.hpp"
 
 // This classes uses the PoseCalculator class to get the end effector pose and is managed by the life cycle
 class PosePublisher : public rclcpp_lifecycle::LifecycleNode
@@ -55,6 +56,13 @@ public:
 
     // [TODO] TRATAR CASO DE INPUT INT
     std::vector<double> link_lengths = get_parameter("links_lenght").as_double_array();
+
+    // Check for invalid data types in link_lengths (int or float)
+    for (double length : link_lengths) {
+        if (!std::is_same<double, decltype(length)>::value && !std::is_floating_point<decltype(length)>::value) {
+            throw InvalidDataTypeException("Invalid data type detected in link_lengths");
+        }
+    }
 
     // initialize class variables
     poseCalculatorObj = std::make_unique<PoseCalculator>("pose_calculator", number_of_links, link_lengths);
