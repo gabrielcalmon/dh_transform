@@ -1,0 +1,28 @@
+@startuml
+!theme plain
+
+skinparam sequenceMessageAlign center
+
+actor User as User
+participant "Life cycle server" as Server
+database Node as Node
+
+User -> Server : Send DH parameters
+note right of User
+  config.yaml
+end note
+
+|||
+Server -> Node : Send DH parameters
+Server -> Node : Send configure command
+
+|||
+Node -> Node : Calculate homogeneus transform
+
+
+|||
+Server <-- Node : Send homogeneus transform
+
+|||
+User <-- Server : Send homogeneus transform
+@enduml

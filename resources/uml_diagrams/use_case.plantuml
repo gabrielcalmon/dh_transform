@@ -1,0 +1,18 @@
+@startuml
+left to right direction
+actor user
+database server
+
+rectangle "Forward kinematics" {
+  usecase "Receive DH parameters" as UC1
+  usecase "Configure start angles" as UC2
+  usecase "Provide end effector position" as UC3
+}
+user --> UC1
+user --> UC2
+user <-- UC3
+
+UC1 --> server
+UC2 --> server
+UC3 <-- server
+@enduml
