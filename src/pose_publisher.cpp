@@ -8,7 +8,6 @@
 #include "sensor_msgs/msg/joint_state.hpp"
 
 #include "../include/pose_calculator.hpp"
-#include "../include/pose_publisher_exceptions.hpp"
 
 // This classes uses the PoseCalculator class to get the end effector pose and is managed by the life cycle
 class PosePublisher : public rclcpp_lifecycle::LifecycleNode

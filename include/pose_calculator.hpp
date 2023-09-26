@@ -9,7 +9,7 @@
 #include "std_msgs/msg/string.hpp"
 #include "geometry_msgs/msg/pose.hpp"
 
-#include "../include/pose_calculator_exceptions.hpp"
+#include "../include/exceptions.hpp"
 
 using Eigen::MatrixXd, Eigen::Matrix4d, Eigen::Vector4d, Eigen::VectorXd;
 
