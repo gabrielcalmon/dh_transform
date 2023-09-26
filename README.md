@@ -36,7 +36,7 @@ This node gets the published angles and use the *Pose Calculator* methods to obt
 ### Service client lifecycle
 This service is responsible for trigger the transitions for the *pose_publisher* node. For now, the logic implemented consist in trigger the configure and the activation transitions if everything is alright. 
 ```bash
-$ ros2 run dh_transform service_client_lifecycle.py
+$ ros2 run dh_transform service_client_lifecycle
 ```
 
 ## Usage
