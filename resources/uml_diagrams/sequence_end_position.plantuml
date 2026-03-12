@@ -1,0 +1,25 @@
+@startuml
+!theme plain
+
+skinparam sequenceMessageAlign center
+
+actor User as User
+participant "Life cycle server" as Server
+database Node as Node
+
+|||
+User -> Server : Send current joint positions
+
+|||
+Server -> Node : Send current joint positions
+Server -> Node : Send activation command
+
+|||
+Node -> Node : Calculate end effector position
+
+|||
+Server <-- Node : Send end effector position
+
+|||
+User <-- Server : Send end effector position
+@enduml

@@ -1,0 +1,5 @@
+/**:
+  ros__parameters:
+    publication_frequency_hz: 1.0
+    number_of_links: 3
+    links_lenght: [0.1, 0.2, 0.3]
